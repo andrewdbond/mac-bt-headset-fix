@@ -11,7 +11,7 @@ import Cocoa
 class StatusMenuController: NSObject {
     @IBOutlet weak var statusMenu: NSMenu!
     
-    let statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
     struct Constants {
         static let aboutUrl = URL(string: "https://github.com/jguice/mac-bt-headset-fix")!
@@ -26,10 +26,10 @@ class StatusMenuController: NSObject {
     }
 
     @IBAction func aboutClicked(_ sender: NSMenuItem) {
-        NSWorkspace.shared().open(Constants.aboutUrl)
+        NSWorkspace.shared.open(Constants.aboutUrl)
     }
     
     @IBAction func quitClicked(_ sender: NSMenuItem) {
-        NSApplication.shared().terminate(self)
+        NSApplication.shared.terminate(self)
     }
 }

@@ -51,17 +51,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func isBannedAppRunning() -> Bool {
-        let runningApps = NSWorkspace.shared().runningApplications
-        let runningBundleIds = runningApps.flatMap({ $0.bundleIdentifier })
+        let runningApps = NSWorkspace.shared.runningApplications
+        let runningBundleIds = runningApps.compactMap({ $0.bundleIdentifier })
         return !Set(runningBundleIds).isDisjoint(with: Constants.bannedAppBundleIds)
     }
 
     func doKey(key: Int, down: Bool) {
-        let flags = NSEventModifierFlags(rawValue: down ? 0xa00 : 0xb00)
+        let flags = NSEvent.ModifierFlags(rawValue: down ? 0xa00 : 0xb00)
         let data1 = (key << 16) | ((down ? 0xa : 0xb) << 8)
         
         let ev = NSEvent.otherEvent(
-            with: NSEventType.systemDefined,
+            with: NSEvent.EventType.systemDefined,
             location: NSPoint(x:0.0, y:0.0),
             modifierFlags: flags,
             timestamp: TimeInterval(0),
@@ -77,7 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func handlePlayPauseCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handlePlayPauseCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard !isBannedAppRunning() else { return .noActionableNowPlayingItem }
 
         doKey(key: NX_KEYTYPE_PLAY, down: true)
@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .success
     }
     
-    func handleNextTrackCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleNextTrackCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard !isBannedAppRunning() else { return .noActionableNowPlayingItem }
 
         doKey(key: NX_KEYTYPE_NEXT, down: true)
@@ -95,7 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .success
     }
     
-    func handlePreviousTrackCommandEvent(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handlePreviousTrackCommandEvent(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard !isBannedAppRunning() else { return .noActionableNowPlayingItem }
 
         doKey(key: NX_KEYTYPE_PREVIOUS, down: true)
@@ -104,7 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .success
     }
     
-    func handleSeekForwardCommandEvent(event: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleSeekForwardCommandEvent(event: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard !isBannedAppRunning() else { return .noActionableNowPlayingItem }
 
         doKey(key: NX_KEYTYPE_FAST, down: true)
@@ -112,7 +112,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .success
     }
     
-    func handleSeekBackwardCommandEvent(event: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleSeekBackwardCommandEvent(event: MPSeekCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard !isBannedAppRunning() else { return .noActionableNowPlayingItem }
 
         doKey(key: NX_KEYTYPE_REWIND, down: true)
